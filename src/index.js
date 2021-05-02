@@ -8,14 +8,6 @@ const refs = {
   clockface: document.querySelector('.js-clockface'),
 };
 
-// Значение localStorage переводим в милисекунды //
-
-// const storageValueToNumber =
-//   Number(localStorage.time.split(':').join('')) * 1000;
-// console.log(storageValueToNumber);
-
-// Сам класс //
-
 class Timer {
   constructor({ onTick }) {
     this.intervalId = null;
@@ -25,42 +17,32 @@ class Timer {
     this.init();
   }
 
-  // storageValueToNumber() {
-  //   const number = Number(localStorage.time.split(':').join('')) * 1000;
-  //   console.log(storageValueToNumber);
-  //   return number;
-  // }
-
-  // clockfaceValueToNumber() {
-  //   Number(refs.clockface.textContent.split(':').join('')) * 1000;
-  //   console.log(clockfaceValueToNumber);
-  // }
-
   init() {
     const time = this.getTimeComponents(0);
     this.onTick(time);
   }
 
   // Замена кнопки Стоп на Старт
-  activeButtonStart() {
-    if (refs.startBtn.hasAttribute('data-action', 'stop')) {
-      refs.startBtn.removeAttribute('data-action', 'stop');
-      refs.startBtn.setAttribute('data-action', 'start');
-      refs.startBtn.textContent = 'Start';
-      refs.startBtn.addEventListener('click', timer.start.bind(timer));
-    }
-  }
+
+  // activeButtonStart() {
+  //   if (refs.startBtn.hasAttribute('data-action', 'stop')) {
+  //     refs.startBtn.removeAttribute('data-action', 'stop');
+  //     refs.startBtn.setAttribute('data-action', 'start');
+  //     refs.startBtn.textContent = 'Start';
+  //     refs.startBtn.addEventListener('click', timer.start.bind(timer));
+  //   }
+  // }
 
   // Замена кнопки Старт на Стоп
 
-  activeButtonStop() {
-    if (refs.startBtn.hasAttribute('data-action', 'start')) {
-      refs.startBtn.removeAttribute('data-action', 'start');
-      refs.startBtn.setAttribute('data-action', 'stop');
-      refs.startBtn.textContent = 'Stop';
-      refs.startBtn.addEventListener('click', timer.stop.bind(timer));
-    }
-  }
+  // activeButtonStop() {
+  //   if (refs.startBtn.hasAttribute('data-action', 'start')) {
+  //     refs.startBtn.removeAttribute('data-action', 'start');
+  //     refs.startBtn.setAttribute('data-action', 'stop');
+  //     refs.startBtn.textContent = 'Stop';
+  //     refs.startBtn.addEventListener('click', timer.stop.bind(timer));
+  //   }
+  // }
 
   countTime() {
     const startTime = Date.now();
@@ -69,8 +51,6 @@ class Timer {
     this.intervalId = setInterval(() => {
       const currentTime = Date.now();
       const deltaTime = currentTime - startTime;
-
-      // console.log(deltaTime);
 
       const time = this.getTimeComponents(deltaTime);
 
@@ -83,31 +63,29 @@ class Timer {
       return;
     }
 
-    // if (storageValueToNumber !== 0) {
-    //   console.log('fdfd');
-    //   // const storage = localStorage.getItem('time');
-    //   // console.log(storage);
+    if (localStorage.time && refs.clockface.textContent !== '00:00:00') {
+      // Значение localStorage переводим в милисекунды //
 
-    //   const startTime = Date.now();
-    //   console.log(this.storageValueToNumber());
-    //   this.isActive = true;
+      const spendTime =
+        Number(localStorage.getItem('time').split(':').join('')) * 1000;
 
-    //   this.intervalId = setInterval(() => {
-    //     const currentTime = Date.now();
-    //     const deltaTime = currentTime - startTime;
-    //     const time = this.getTimeComponents(deltaTime);
-    //     // this.time = this.getTimeComponents(deltaTime);
+      const startTime = Date.now();
+      this.isActive = true;
 
-    //     this.onTick(time);
-    //     // this.onTick(this.time);
-    //   }, 1000);
-    // }
+      this.intervalId = setInterval(() => {
+        const currentTime = Date.now();
+        const deltaTime = currentTime - startTime + spendTime;
+        const time = this.getTimeComponents(deltaTime);
 
-    this.countTime();
+        this.onTick(time);
+      }, 1000);
+    } else {
+      this.countTime();
+    }
 
-    this.activeButtonStop();
+    // this.countTime();
 
-    console.log(refs.startBtn.textContent);
+    // this.activeButtonStop();
   }
 
   stop() {
@@ -116,7 +94,7 @@ class Timer {
     const time = this.getTimeComponents(0);
     this.onTick(time);
 
-    this.activeButtonStart();
+    // this.activeButtonStart();
   }
 
   wait() {
@@ -126,7 +104,7 @@ class Timer {
     clearInterval(this.intervalId);
     this.isActive = false;
 
-    this.activeButtonStart();
+    // this.activeButtonStart();
   }
 
   reset() {
@@ -136,7 +114,7 @@ class Timer {
     this.onTick(time);
     this.countTime();
 
-    this.activeButtonStop();
+    // this.activeButtonStop();
   }
 
   pad(value) {
@@ -160,7 +138,7 @@ const timer = new Timer({
 
 refs.startBtn.addEventListener('click', timer.start.bind(timer));
 
-// refs.stopBtn.addEventListener('click', timer.stop.bind(timer));
+refs.stopBtn.addEventListener('click', timer.stop.bind(timer));
 
 refs.waitBtn.addEventListener('click', timer.wait.bind(timer));
 
