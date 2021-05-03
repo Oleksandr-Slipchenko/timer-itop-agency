@@ -97,6 +97,8 @@ class Timer {
   }
 
   reset() {
+    refs.startBtn.style.visibility = 'hidden';
+    refs.stopBtn.style.visibility = 'visible';
     clearInterval(this.intervalId);
     this.isActive = false;
     const time = this.getTimeComponents(0);
