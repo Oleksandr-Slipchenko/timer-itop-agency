@@ -15,6 +15,10 @@ class Timer {
     this.onTick = onTick;
 
     this.init();
+
+    this.pressed = null;
+    this.lastPressed = null;
+    this.isDoublePress = null;
   }
 
   init() {
@@ -83,8 +87,6 @@ class Timer {
       this.countTime();
     }
 
-    // this.countTime();
-
     // this.activeButtonStop();
   }
 
@@ -97,13 +99,27 @@ class Timer {
     // this.activeButtonStart();
   }
 
-  wait() {
+  timeOut = () => setTimeout(() => (this.isDoublePress = false), 300);
+
+  wait(e) {
+    this.pressed = e.keyCode;
+
+    if (this.isDoublePress && this.pressed === this.lastPressed) {
+      this.isDoublePress = false;
+      localStorage.setItem('time', refs.clockface.textContent);
+      clearInterval(this.intervalId);
+      this.isActive = false;
+    } else {
+      this.isDoublePress = true;
+      this.timeOut();
+    }
+
+    this.lastPressed = this.pressed;
+
     // this.clockfaceValueToNumber();
-
-    localStorage.setItem('time', refs.clockface.textContent);
-    clearInterval(this.intervalId);
-    this.isActive = false;
-
+    // localStorage.setItem('time', refs.clockface.textContent);
+    // clearInterval(this.intervalId);
+    // this.isActive = false;
     // this.activeButtonStart();
   }
 
