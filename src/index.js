@@ -26,28 +26,6 @@ class Timer {
     this.onTick(time);
   }
 
-  // Замена кнопки Стоп на Старт
-
-  // activeButtonStart() {
-  //   if (refs.startBtn.hasAttribute('data-action', 'stop')) {
-  //     refs.startBtn.removeAttribute('data-action', 'stop');
-  //     refs.startBtn.setAttribute('data-action', 'start');
-  //     refs.startBtn.textContent = 'Start';
-  //     refs.startBtn.addEventListener('click', timer.start.bind(timer));
-  //   }
-  // }
-
-  // Замена кнопки Старт на Стоп
-
-  // activeButtonStop() {
-  //   if (refs.startBtn.hasAttribute('data-action', 'start')) {
-  //     refs.startBtn.removeAttribute('data-action', 'start');
-  //     refs.startBtn.setAttribute('data-action', 'stop');
-  //     refs.startBtn.textContent = 'Stop';
-  //     refs.startBtn.addEventListener('click', timer.stop.bind(timer));
-  //   }
-  // }
-
   countTime() {
     const startTime = Date.now();
     this.isActive = true;
@@ -63,13 +41,14 @@ class Timer {
   }
 
   start() {
+    refs.startBtn.style.visibility = 'hidden';
+    refs.stopBtn.style.visibility = 'visible';
+
     if (this.isActive) {
       return;
     }
 
     if (localStorage.time && refs.clockface.textContent !== '00:00:00') {
-      // Значение localStorage переводим в милисекунды //
-
       const spendTime =
         Number(localStorage.getItem('time').split(':').join('')) * 1000;
 
@@ -86,17 +65,15 @@ class Timer {
     } else {
       this.countTime();
     }
-
-    // this.activeButtonStop();
   }
 
   stop() {
+    refs.stopBtn.style.visibility = 'hidden';
+    refs.startBtn.style.visibility = 'visible';
     clearInterval(this.intervalId);
     this.isActive = false;
     const time = this.getTimeComponents(0);
     this.onTick(time);
-
-    // this.activeButtonStart();
   }
 
   timeOut = () => setTimeout(() => (this.isDoublePress = false), 300);
@@ -106,6 +83,8 @@ class Timer {
 
     if (this.isDoublePress && this.pressed === this.lastPressed) {
       this.isDoublePress = false;
+      refs.stopBtn.style.visibility = 'hidden';
+      refs.startBtn.style.visibility = 'visible';
       localStorage.setItem('time', refs.clockface.textContent);
       clearInterval(this.intervalId);
       this.isActive = false;
@@ -115,12 +94,6 @@ class Timer {
     }
 
     this.lastPressed = this.pressed;
-
-    // this.clockfaceValueToNumber();
-    // localStorage.setItem('time', refs.clockface.textContent);
-    // clearInterval(this.intervalId);
-    // this.isActive = false;
-    // this.activeButtonStart();
   }
 
   reset() {
@@ -129,8 +102,6 @@ class Timer {
     const time = this.getTimeComponents(0);
     this.onTick(time);
     this.countTime();
-
-    // this.activeButtonStop();
   }
 
   pad(value) {

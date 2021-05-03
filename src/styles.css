@@ -47,3 +47,20 @@ body {
 .timer-btn.is-active {
   background-color: #2196f3;
 }
+
+.actions {
+  position: relative;
+  margin-left: 128px;
+}
+
+.start {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 264px);
+}
+.stop {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 264px);
+  visibility: hidden;
+}
